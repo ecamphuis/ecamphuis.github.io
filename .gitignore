@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# editors
+.vscode/
+.idea/
+*.swp
+
+# node / build
+node_modules/
+dist/
+
+# notes de travail (non publiees)
+TODO.md
+
+# sorties de session Claude
+Claude outputs/
+cv/
+*.pdf

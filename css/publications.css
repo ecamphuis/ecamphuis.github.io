@@ -1,0 +1,227 @@
+/* ===================================================================
+ * publications.css
+ *
+ * Section "Selected Research Works" : une carte par article, avec la
+ * figure marquante de l'article, la reference, un resume court et les
+ * liens (arXiv / journal / code).
+ *
+ * Ce fichier est charge APRES css/styles.css et n'en modifie rien :
+ * il reutilise seulement ses variables (--font-1, --color-1, --vspace-*).
+ * Toute la personnalisation du site vit ici, le template reste intact.
+ * =================================================================== */
+
+
+/* -------------------------------------------------------------------
+ * grille
+ * ------------------------------------------------------------------- */
+.pubs {
+    --width-grid-max: 1400px;
+    display              : grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap                  : var(--vspace-1);
+    margin-top           : var(--vspace-1_5);
+}
+
+@media screen and (max-width: 900px) {
+    .pubs {
+        grid-template-columns: minmax(0, 1fr);
+        gap                  : var(--vspace-1_25);
+    }
+}
+
+
+/* -------------------------------------------------------------------
+ * carte
+ * ------------------------------------------------------------------- */
+.pub {
+    display         : flex;
+    flex-direction  : column;
+    background-color: var(--color-white);
+    border          : 1px solid var(--color-gray-11);
+    border-radius   : var(--border-radius);
+    overflow        : hidden;
+    transition      : border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pub:hover {
+    border-color: var(--color-gray-13);
+    transform   : translateY(-3px);
+    box-shadow  : 0 12px 28px rgba(0, 0, 0, 0.07);
+}
+
+
+/* -------------------------------------------------------------------
+ * la figure
+ *
+ * Boite a ratio fixe + object-fit: contain : les figures scientifiques
+ * ont des formats tres varies, ceci les aligne sans jamais les rogner
+ * ni les deformer. Le fond gris clair evite l'effet "figure qui flotte"
+ * quand le fond de la figure est blanc.
+ * ------------------------------------------------------------------- */
+.pub__figure {
+    display         : block;
+    position        : relative;
+    aspect-ratio    : 16 / 10;
+    background-color: var(--color-gray-6);
+    border-bottom   : 1px solid var(--color-gray-10);
+    padding         : var(--vspace-0_5);
+    overflow        : hidden;
+}
+
+.pub__figure img {
+    width      : 100%;
+    height     : 100%;
+    object-fit : contain;
+    margin     : 0;
+    transition : transform 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.pub:hover .pub__figure img {
+    transform: scale(1.03);
+}
+
+/* pastille "agrandir", visible au survol et au focus clavier */
+.pub__zoom {
+    z-index         : 2;
+    position        : absolute;
+    right           : var(--vspace-0_375);
+    bottom          : var(--vspace-0_375);
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    width           : 3.6rem;
+    height          : 3.6rem;
+    border-radius   : 50%;
+    background-color: rgba(24, 24, 24, 0.82);
+    opacity         : 0;
+    visibility     : hidden;
+    transition      : opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.pub__zoom svg {
+    width : 1.6rem;
+    height: 1.6rem;
+    fill  : var(--color-white);
+}
+
+.pub:hover .pub__zoom,
+.pub__figure:focus-visible .pub__zoom {
+    opacity   : 1;
+    visibility: visible;
+}
+
+
+/* -------------------------------------------------------------------
+ * texte
+ * ------------------------------------------------------------------- */
+.pub__body {
+    display       : flex;
+    flex-direction: column;
+    flex          : 1 1 auto;
+    padding       : var(--vspace-0_75) var(--vspace-0_75) var(--vspace-0_625);
+}
+
+/* reference : journal + annee */
+.pub__meta {
+    font-family   : var(--font-1);
+    font-weight   : 600;
+    font-size     : calc(var(--text-size) * 0.75);
+    line-height   : 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color         : var(--color-1);
+    margin        : 0 0 var(--vspace-0_25) 0;
+}
+
+.pub__title {
+    font-family  : var(--font-2);
+    font-weight  : 400;
+    font-size    : calc(var(--text-size) * 1.15);
+    line-height  : 1.3;
+    color        : var(--color-text-dark);
+    margin       : 0 0 var(--vspace-0_25) 0;
+}
+
+/* role dans l'article : "premier auteur", "analyse dirigee par"... */
+.pub__role {
+    font-family: var(--font-1);
+    font-size  : calc(var(--text-size) * 0.8);
+    font-style : italic;
+    color      : var(--color-text-light);
+    margin     : 0 0 var(--vspace-0_375) 0;
+}
+
+.pub__desc {
+    font-size  : calc(var(--text-size) * 0.9);
+    line-height: 1.65;
+    color      : var(--color-gray-17);
+    margin     : 0 0 var(--vspace-0_5) 0;
+}
+
+/* legende de la figure, discrete */
+.pub__caption {
+    font-family  : var(--font-1);
+    font-size    : calc(var(--text-size) * 0.75);
+    line-height  : 1.5;
+    color        : var(--color-text-light);
+    border-left  : 2px solid var(--color-gray-11);
+    padding-left : var(--vspace-0_375);
+    margin       : 0 0 var(--vspace-0_5) 0;
+}
+
+
+/* -------------------------------------------------------------------
+ * liens
+ * ------------------------------------------------------------------- */
+.pub__links {
+    display    : flex;
+    flex-wrap  : wrap;
+    gap        : var(--vspace-0_375) var(--vspace-0_625);
+    margin-top : auto;
+    padding-top: var(--vspace-0_25);
+    list-style : none;
+}
+
+.pub__links li {
+    padding-left: 0;
+    margin      : 0;
+}
+
+.pub__links li::before {
+    display: none;
+}
+
+.pub__links a {
+    font-family    : var(--font-1);
+    font-weight    : 500;
+    font-size      : calc(var(--text-size) * 0.8);
+    letter-spacing : 0.05em;
+    text-transform : uppercase;
+    color          : var(--color-text-dark);
+    border-bottom  : 1px solid var(--color-gray-12);
+    padding-bottom : 2px;
+    transition     : color 0.2s ease, border-color 0.2s ease;
+}
+
+.pub__links a:hover,
+.pub__links a:focus {
+    color        : var(--color-1);
+    border-color : var(--color-1);
+}
+
+.pub__links a::after {
+    content     : "\2197";          /* fleche sortante */
+    display     : inline-block;
+    margin-left : 0.4em;
+    font-size   : 0.9em;
+    line-height : 1;
+}
+
+
+/* -------------------------------------------------------------------
+ * lien vers la liste complete des publications
+ * ------------------------------------------------------------------- */
+.pubs-more {
+    margin-top: var(--vspace-1_25);
+    text-align: center;
+}
